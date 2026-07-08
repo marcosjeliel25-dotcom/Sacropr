@@ -10,6 +10,8 @@ tracks:
   - 'Bocanada'
   - 'Life'
   - 'Simplemente No Hay Conexión'
+symbols: ['traje-negro', 'carro', 'bicicleta']
+locations: ['primera-posita', 'segunda-posita', 'bosque-magico']
 ---
 
 Cuatro escenas antes del álbum. No explican los eventos — preparan la emoción.

@@ -11,65 +11,89 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const prefix = locale === 'es' ? '' : '/en';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const journal = (await getCollection('journal')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const es = locale === 'es';
 
-type Item = { year: string; title: string; kind: string; href?: string };
-const items: Item[] = [
-  { year: '2024', title: 'La Luz al Final del Túnel', kind: 'EP' },
-  { year: '2024', title: 'Desbalance', kind: locale === 'es' ? 'Sencillo' : 'Single' },
-  { year: '2024', title: 'Me Pesa', kind: locale === 'es' ? 'Sencillo' : 'Single' },
-  ...projects.map((p) => ({
-    year: p.data.year,
-    title: p.data.title,
-    kind: p.data.kind,
-    href: `${base}${prefix}/proyectos/${p.id}`,
-  })),
+type Item = { title: string; kind?: string; href?: string };
+type Era = { year: string; items: Item[] };
+
+const timeline: Era[] = [
+  {
+    year: '2023',
+    items: [
+      { title: es ? 'Todo cambia. La música se vuelve el centro.' : 'Everything changes. Music becomes the center.' },
+      { title: es ? 'Primeros shows en vivo.' : 'First live shows.' },
+    ],
+  },
+  {
+    year: '2024',
+    items: [
+      { title: 'La Luz al Final del Túnel', kind: 'EP' },
+      { title: 'Desbalance', kind: es ? 'Sencillo' : 'Single' },
+      { title: 'Me Pesa', kind: es ? 'Sencillo' : 'Single' },
+    ],
+  },
+  {
+    year: '2026',
+    items: projects.map((p) => ({
+      title: p.data.title,
+      kind: p.data.kind,
+      href: `${base}${prefix}/proyectos/${p.id}`,
+    })),
+  },
+  {
+    year: '—',
+    items: [{ title: es ? 'La historia continúa.' : 'The story continues.' }],
+  },
 ];
+
+const journal = (await getCollection('journal')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Base locale={locale} title={t(locale, 'archive.title')}>
   <div class="wrap">
-    <section class="py-16">
-      <p class="eyebrow mb-3">{t(locale, 'archive.title')}</p>
-      <p class="serif text-[clamp(22px,3.4vw,28px)] italic">{t(locale, 'archive.intro')}</p>
+    <section class="reveal py-20">
+      <p class="eyebrow d1 reveal mb-4">{t(locale, 'archive.title')}</p>
+      <p class="serif d2 reveal text-[clamp(22px,3.4vw,28px)] italic">{t(locale, 'archive.intro')}</p>
     </section>
 
-    <section class="pb-16">
-      {
-        items.map((r, i) => {
-          const inner = (
-            <>
-              <span class="min-w-12 text-[11px] tracking-[0.18em] text-piedra">{r.year}</span>
-              <span class="serif flex-1 text-[clamp(21px,3.4vw,26px)]">{r.title}</span>
-              <span class="text-[10px] tracking-[0.26em] uppercase whitespace-nowrap text-piedra">{r.kind}</span>
-            </>
-          );
-          const cls = `hairline flex items-baseline gap-5 border-b py-6 ${i === 0 ? 'border-t' : ''}`;
-          return r.href ? (
-            <a class={`${cls} transition-colors duration-300 hover:text-bronce`} href={r.href}>
-              {inner}
-            </a>
-          ) : (
-            <div class={cls}>{inner}</div>
-          );
-        })
-      }
-    </section>
+    {
+      timeline.map((era) => (
+        <section class="reveal pb-16">
+          <p class="serif mb-8 text-[clamp(28px,5vw,40px)] font-light tracking-[0.18em] text-bronce">{era.year}</p>
+          {era.items.map((r, i) => {
+            const inner = (
+              <>
+                <span class="serif flex-1 text-[clamp(19px,3vw,24px)]">{r.title}</span>
+                {r.kind && <span class="text-[10px] tracking-[0.26em] uppercase whitespace-nowrap text-piedra">{r.kind}</span>}
+              </>
+            );
+            const cls = `hairline flex items-baseline gap-5 border-b py-5 ${i === 0 ? 'border-t' : ''}`;
+            return r.href ? (
+              <a class={`${cls} transition-colors duration-300 hover:text-bronce`} href={r.href}>
+                {inner}
+              </a>
+            ) : (
+              <div class={cls}>{inner}</div>
+            );
+          })}
+        </section>
+      ))
+    }
 
-    <section class="pb-20">
+    <section class="reveal pb-24">
       <p class="eyebrow mb-10">{t(locale, 'journal.title')}</p>
       {
         journal.slice(0, 3).map((e) => (
           <article class="hairline border-b py-6 first:border-t">
             <time class="text-[11px] tracking-[0.18em] text-piedra" datetime={e.data.date.toISOString().slice(0, 10)}>
-              {e.data.date.toLocaleDateString(locale === 'es' ? 'es-PR' : 'en-US', { month: 'long', day: 'numeric' })}
+              {e.data.date.toLocaleDateString(es ? 'es-PR' : 'en-US', { month: 'long', day: 'numeric' })}
             </time>
-            <p class="serif mt-1 text-xl">{e.body?.trim()}</p>
+            <p class="serif mt-1 text-xl italic">{e.body?.trim()}</p>
           </article>
         ))
       }
       <p class="mt-8">
-        <a href={`${base}${prefix}/diario`} class="text-[12px] tracking-[0.32em] uppercase text-piedra transition-colors duration-300 hover:text-bronce">
+        <a href={`${base}${prefix}/diario`} class="inline-block py-2 text-[12px] tracking-[0.32em] uppercase text-piedra transition-colors duration-300 hover:text-bronce">
           {t(locale, 'journal.title')} <span class="serif text-bronce">→</span>
         </a>
       </p>

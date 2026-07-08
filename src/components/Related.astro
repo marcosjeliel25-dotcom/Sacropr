@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import { t, type Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  symbols?: string[];
+  locations?: string[];
+  projects?: string[];
+  /** slug of the current entry, so journal mentions can be found: e.g. { collection: 'symbols', id: 'traje-negro' } */
+  mentionsOf?: { collection: 'symbols' | 'locations' | 'projects'; id: string };
+}
+
+const { locale, symbols = [], locations = [], projects = [], mentionsOf } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+
+const allSymbols = await getCollection('symbols');
+const allLocations = await getCollection('locations');
+const allProjects = await getCollection('projects');
+const allJournal = await getCollection('journal');
+
+type Link = { label: string; kind: string; href: string };
+const links: Link[] = [];
+
+for (const id of projects) {
+  const e = allProjects.find((p) => p.id === id);
+  if (e) links.push({ label: e.data.title, kind: e.data.kind, href: `${base}${prefix}/proyectos/${e.id}` });
+}
+for (const id of symbols) {
+  const e = allSymbols.find((s) => s.id === id);
+  if (e) links.push({ label: e.data.name, kind: t(locale, 'world.symbols'), href: `${base}${prefix}/mundo/simbolos/${e.id}` });
+}
+for (const id of locations) {
+  const e = allLocations.find((l) => l.id === id);
+  if (e) links.push({ label: e.data.name, kind: t(locale, 'world.locations'), href: `${base}${prefix}/mundo/lugares/${e.id}` });
+}
+
+const mentions = mentionsOf
+  ? allJournal
+      .filter((e) => (e.data[mentionsOf.collection] as string[]).includes(mentionsOf.id))
+      .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  : [];
+---
+
+{
+  (links.length > 0 || mentions.length > 0) && (
+    <section class="reveal pb-20">
+      <p class="eyebrow mb-8">{t(locale, 'related.title')}</p>
+      <div class="flex flex-col">
+        {links.map((l, i) => (
+          <a
+            href={l.href}
+            class={`hairline flex items-baseline justify-between gap-5 border-b py-4 transition-colors duration-300 hover:text-bronce ${i === 0 ? 'border-t' : ''}`}
+          >
+            <span class="serif text-[clamp(18px,2.8vw,22px)]">{l.label}</span>
+            <span class="text-[10px] tracking-[0.26em] uppercase whitespace-nowrap text-piedra">{l.kind}</span>
+          </a>
+        ))}
+        {mentions.map((e, i) => (
+          <a
+            href={`${base}${prefix}/diario`}
+            class={`hairline flex items-baseline justify-between gap-5 border-b py-4 transition-colors duration-300 hover:text-bronce ${links.length === 0 && i === 0 ? 'border-t' : ''}`}
+          >
+            <span class="serif text-[clamp(18px,2.8vw,22px)] italic">{e.body?.trim()}</span>
+            <span class="text-[10px] tracking-[0.26em] uppercase whitespace-nowrap text-piedra">
+              {t(locale, 'journal.mentions')} ·{' '}
+              {e.data.date.toLocaleDateString(locale === 'es' ? 'es-PR' : 'en-US', { month: 'long', day: 'numeric' })}
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}

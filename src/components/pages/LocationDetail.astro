@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Related from '../Related.astro';
 import { t, type Locale } from '../../i18n/ui';
 
 interface Props {
@@ -10,26 +11,29 @@ interface Props {
 }
 const { locale, entry } = Astro.props;
 const { Content } = await render(entry);
+const d = entry.data;
 ---
 
-<Base locale={locale} title={entry.data.name}>
+<Base locale={locale} title={d.name}>
   <div class="wrap">
-    <section class="py-16">
-      <p class="eyebrow mb-3">{entry.data.region ?? t(locale, 'world.locations')}</p>
-      <h1 class="serif text-[clamp(38px,8vw,60px)] leading-tight font-light">{entry.data.name}</h1>
+    <section class="reveal py-24">
+      <p class="eyebrow d1 reveal mb-4">{d.region ?? t(locale, 'world.locations')}</p>
+      <h1 class="serif d2 reveal text-[clamp(38px,8vw,60px)] leading-tight font-light">{d.name}</h1>
     </section>
 
-    <section class="serif pb-12 text-[clamp(19px,3vw,23px)] italic leading-relaxed">
+    <section class="serif reveal pb-20 text-[clamp(19px,3vw,23px)] italic leading-relaxed">
       <Content />
     </section>
 
     {
-      entry.data.connected.length > 0 && (
-        <section class="pb-20">
+      d.connected.length > 0 && (
+        <section class="reveal pb-16">
           <p class="eyebrow mb-6">{t(locale, 'location.connected')}</p>
-          <p class="serif text-lg text-piedra">{entry.data.connected.join(' · ')}</p>
+          <p class="serif text-lg text-piedra">{d.connected.join(' · ')}</p>
         </section>
       )
     }
+
+    <Related locale={locale} symbols={d.symbols} projects={d.projects} mentionsOf={{ collection: 'locations', id: entry.id }} />
   </div>
 </Base>

@@ -16,14 +16,14 @@ const locations = (await getCollection('locations')).sort((a, b) => a.data.order
 
 <Base locale={locale} title={t(locale, 'world.title')}>
   <div class="wrap">
-    <section class="py-16">
+    <section class="reveal py-16">
       <p class="eyebrow mb-3">{t(locale, 'world.title')}</p>
       <p class="serif text-[clamp(22px,3.4vw,28px)] italic">
         {locale === 'es' ? 'No explicado. Documentado.' : 'Not explained. Documented.'}
       </p>
     </section>
 
-    <section class="pb-16">
+    <section class="reveal pb-16">
       <p class="eyebrow mb-10">{t(locale, 'world.symbols')}</p>
       <div class="grid grid-cols-2 gap-x-8">
         {
@@ -39,7 +39,7 @@ const locations = (await getCollection('locations')).sort((a, b) => a.data.order
       </div>
     </section>
 
-    <section class="pb-20">
+    <section class="reveal pb-20">
       <p class="eyebrow mb-10">{t(locale, 'world.locations')}</p>
       <div class="grid grid-cols-2 gap-x-8">
         {

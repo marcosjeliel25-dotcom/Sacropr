@@ -15,7 +15,7 @@ const projects = (await getCollection('projects')).sort((a, b) => a.data.order -
 
 <Base locale={locale} title={t(locale, 'projects.title')}>
   <div class="wrap">
-    <section class="py-16">
+    <section class="reveal py-16">
       <p class="eyebrow mb-12">{t(locale, 'projects.title')}</p>
       {
         projects.map((p, i) => (

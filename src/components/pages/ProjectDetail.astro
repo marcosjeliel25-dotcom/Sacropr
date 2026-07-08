@@ -2,7 +2,8 @@
 import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import type { Locale } from '../../i18n/ui';
+import Related from '../Related.astro';
+import { t, type Locale } from '../../i18n/ui';
 
 interface Props {
   locale: Locale;
@@ -10,26 +11,36 @@ interface Props {
 }
 const { locale, project } = Astro.props;
 const { Content } = await render(project);
+const d = project.data;
 ---
 
-<Base locale={locale} title={project.data.title}>
+<Base locale={locale} title={d.title}>
   <div class="wrap">
-    <section class="py-16">
-      <p class="eyebrow mb-3">{project.data.year} · {project.data.kind}</p>
-      <h1 class="serif text-[clamp(38px,8vw,64px)] leading-tight font-light">{project.data.title}</h1>
-      {project.data.manifesto && <p class="serif mt-4 text-[clamp(19px,3vw,24px)] italic text-piedra">{project.data.manifesto}</p>}
+    <section class="reveal py-24">
+      <p class="eyebrow d1 reveal mb-4">{d.year} · {d.kind}</p>
+      <h1 class="serif d2 reveal text-[clamp(38px,8vw,64px)] leading-tight font-light">{d.title}</h1>
+      {d.manifesto && <p class="serif d3 reveal mt-6 text-[clamp(19px,3vw,24px)] italic text-piedra">{d.manifesto}</p>}
     </section>
 
-    <section class="prose-sacro serif pb-16 text-[clamp(18px,2.8vw,21px)] leading-relaxed">
+    <section class="prose-sacro serif reveal pb-24 text-[clamp(18px,2.8vw,21px)] leading-relaxed">
       <Content />
     </section>
 
     {
-      project.data.tracks.length > 0 && (
-        <section class="pb-20">
-          <p class="eyebrow mb-10">{locale === 'es' ? 'Canciones' : 'Tracks'}</p>
+      d.story && (
+        <section class="reveal pb-24">
+          <p class="eyebrow mb-8">{t(locale, 'project.story')}</p>
+          <p class="serif text-[clamp(18px,2.8vw,21px)] italic leading-relaxed">{d.story}</p>
+        </section>
+      )
+    }
+
+    {
+      d.tracks.length > 0 && (
+        <section class="reveal pb-24">
+          <p class="eyebrow mb-10">{t(locale, 'project.tracks')}</p>
           <ol class="list-none">
-            {project.data.tracks.map((track, i) => (
+            {d.tracks.map((track, i) => (
               <li class="hairline flex items-baseline gap-5 border-b py-4 first:border-t">
                 <span class="min-w-8 text-[11px] tracking-[0.18em] text-piedra">{String(i + 1).padStart(2, '0')}</span>
                 <span class="serif text-[clamp(19px,3vw,23px)]">{track}</span>
@@ -39,6 +50,28 @@ const { Content } = await render(project);
         </section>
       )
     }
+
+    {
+      d.notes && (
+        <section class="reveal pb-24">
+          <p class="eyebrow mb-8">{t(locale, 'project.notes')}</p>
+          <p class="serif text-[clamp(17px,2.6vw,19px)] italic leading-relaxed text-piedra">{d.notes}</p>
+        </section>
+      )
+    }
+
+    {
+      d.credits.length > 0 && (
+        <section class="reveal pb-24">
+          <p class="eyebrow mb-8">{t(locale, 'project.credits')}</p>
+          {d.credits.map((c) => (
+            <p class="serif text-lg text-piedra">{c}</p>
+          ))}
+        </section>
+      )
+    }
+
+    <Related locale={locale} symbols={d.symbols} locations={d.locations} mentionsOf={{ collection: 'projects', id: project.id }} />
   </div>
 </Base>
 

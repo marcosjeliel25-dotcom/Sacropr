@@ -15,6 +15,7 @@ tracks:
   - "Como Si Na'"
   - 'Hambre'
   - 'Cerámica'
+symbols: ['guaraguao', 'foto-del-dashboard', 'invitacion', 'silla-vacia', 'casas-abandonadas']
 ---
 
 Tres actos. Despertar, viaje, futuro. La realidad se rompe, la transformación, la búsqueda. Perspectiva, ceremonia, aceptación.

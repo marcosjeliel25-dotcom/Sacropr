@@ -16,17 +16,11 @@ const releases = [
   { year: '2024', title: 'Me Pesa', kind: locale === 'es' ? 'Sencillo' : 'Single', href: 'https://open.spotify.com/track/6gN2MorjH6rJcZfu3hsGPo' },
 ];
 
-const listen = [
-  { label: 'Spotify', href: 'https://open.spotify.com/artist/3gy7JBS79nEvQ2jDORrBCx' },
-  { label: 'Apple Music', href: 'https://music.apple.com/us/artist/sacro/1701623595' },
-  { label: 'YouTube', href: 'https://youtube.com/@laesquinadesacro' },
-  { label: 'Instagram', href: 'https://www.instagram.com/sacropr' },
-];
-
 const doors = [
   { href: `${base}${prefix}/archivo`, label: t(locale, 'nav.archive') },
   { href: `${base}${prefix}/proyectos`, label: t(locale, 'nav.projects') },
   { href: `${base}${prefix}/mundo`, label: t(locale, 'nav.world') },
+  { href: `${base}${prefix}/creacion`, label: t(locale, 'nav.creation') },
   { href: `${base}${prefix}/diario`, label: t(locale, 'nav.journal') },
   { href: `${base}${prefix}/contacto`, label: t(locale, 'nav.contact') },
 ];
@@ -34,12 +28,12 @@ const doors = [
 
 <Base locale={locale} bare>
   <header class="flex min-h-svh flex-col items-center justify-center px-6 text-center">
-    <div class="mb-11">
+    <div class="reveal mb-11">
       <Bird />
     </div>
-    <h1 class="serif text-[clamp(58px,13vw,110px)] leading-none font-light tracking-[0.4em] -mr-[0.4em]">SACRO</h1>
-    <p class="serif mt-10 text-[clamp(17px,2.8vw,21px)] italic">{t(locale, 'home.sentence')}</p>
-    <div class="rule mt-11" aria-hidden="true"></div>
+    <h1 class="reveal d1 serif text-[clamp(58px,13vw,110px)] leading-none font-light tracking-[0.4em] -mr-[0.4em]">SACRO</h1>
+    <p class="reveal d2 serif mt-10 text-[clamp(17px,2.8vw,21px)] italic">{t(locale, 'home.sentence')}</p>
+    <div class="reveal d3 rule mt-11" aria-hidden="true"></div>
   </header>
 
   <div class="wrap">
@@ -89,22 +83,5 @@ const doors = [
       </nav>
     </section>
 
-    <section class="reveal pb-20">
-      <p class="eyebrow mb-12">{t(locale, 'listen.title')}</p>
-      <div class="flex flex-col">
-        {
-          listen.map((l, i) => (
-            <a
-              href={l.href}
-              target="_blank"
-              rel="noopener"
-              class={`hairline flex items-center justify-between border-b py-5 text-[12px] tracking-[0.32em] uppercase transition-colors duration-300 hover:text-bronce ${i === 0 ? 'border-t' : ''}`}
-            >
-              {l.label} <span class="serif text-lg text-bronce">→</span>
-            </a>
-          ))
-        }
-      </div>
-    </section>
   </div>
 </Base>

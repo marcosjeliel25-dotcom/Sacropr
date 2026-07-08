@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+
+const entries = (await getCollection('creation')).sort((a, b) => a.data.order - b.data.order);
+const allSymbols = await getCollection('symbols');
+const allLocations = await getCollection('locations');
+const allProjects = await getCollection('projects');
+
+const rendered = await Promise.all(
+  entries.map(async (e) => {
+    const { Content } = await render(e);
+    const refs: { label: string; href: string }[] = [];
+    for (const id of e.data.projects) {
+      const p = allProjects.find((x) => x.id === id);
+      if (p) refs.push({ label: p.data.title, href: `${base}${prefix}/proyectos/${p.id}` });
+    }
+    for (const id of e.data.symbols) {
+      const s = allSymbols.find((x) => x.id === id);
+      if (s) refs.push({ label: s.data.name, href: `${base}${prefix}/mundo/simbolos/${s.id}` });
+    }
+    for (const id of e.data.locations) {
+      const l = allLocations.find((x) => x.id === id);
+      if (l) refs.push({ label: l.data.name, href: `${base}${prefix}/mundo/lugares/${l.id}` });
+    }
+    return { entry: e, Content, refs };
+  })
+);
+---
+
+<Base locale={locale} title={t(locale, 'creation.title')}>
+  <div class="wrap">
+    <section class="reveal py-20">
+      <p class="eyebrow d1 reveal mb-4">{t(locale, 'creation.title')}</p>
+      <p class="serif d2 reveal text-[clamp(22px,3.4vw,28px)] italic">{t(locale, 'creation.intro')}</p>
+    </section>
+
+    {
+      rendered.map(({ entry, Content, refs }) => (
+        <article class="reveal pb-20">
+          <p class="eyebrow mb-4">{entry.data.category}</p>
+          <h2 class="serif text-[clamp(24px,4vw,32px)] font-light">{entry.data.title}</h2>
+          <div class="prose-sacro serif mt-4 text-[clamp(18px,2.8vw,21px)] italic leading-relaxed">
+            <Content />
+          </div>
+          {refs.length > 0 && (
+            <p class="mt-5 flex flex-wrap gap-x-5 gap-y-1">
+              {refs.map((r) => (
+                <a href={r.href} class="inline-block py-1 text-[10px] tracking-[0.26em] uppercase text-piedra transition-colors duration-300 hover:text-bronce">
+                  {r.label}
+                </a>
+              ))}
+            </p>
+          )}
+        </article>
+      ))
+    }
+  </div>
+</Base>

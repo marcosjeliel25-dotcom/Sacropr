@@ -63,4 +63,14 @@ Nunca preguntar "¿qué se ve cool?". Siempre preguntar **"¿qué hace el mundo 
 
 **Construido en v1:** diseño base, layout, Home, Archivo, Proyectos (Prequel + Del Amor al Arte), Mundo (símbolos + locaciones), Diario, Contacto, colecciones Markdown, RSS, sitemap, dark mode cálido, ES/EN base, tipografías autohospedadas.
 
-**Future Seed (documentado, no construido):** Shop, búsqueda global, línea de tiempo interactiva, mapa interactivo de Puerto Rico, visor fullscreen/cine, páginas de films por video, galería fotográfica. Se construyen cuando exista el contenido real que las justifique.
+**Future Seed (documentado, no construido):** Shop, búsqueda global, mapa interactivo de Puerto Rico, visor fullscreen/cine, páginas de films por video, galería fotográfica. Se construyen cuando exista el contenido real que las justifique.
+
+## v2 — El museo (Julio 2026) · Status: Canon
+
+- **Sistema de movimiento:** revelado lento (1s ease-in-out, subida de 10px) con escalonado; transiciones de página en crossfade de 0.5s; todo respeta reduced motion.
+- **Navegación relacionada:** todo se conecta — símbolos ↔ proyectos ↔ lugares ↔ diario ↔ creación. Bloque "Relacionado" en cada página de detalle; solo aparece si hay referencias reales.
+- **Archivo = línea de tiempo:** 2023 (la música se vuelve el centro) → 2024 (tres lanzamientos) → 2026 (Prequel, Del Amor al Arte) → futuro.
+- **Creación:** nueva sección — decisiones, sesiones, filosofía de producción. El corazón del archivo.
+- **Proyectos como exhibición:** secciones condicionales (historia, canciones, notas, créditos, relacionado) que solo aparecen si existe el contenido.
+- **Footer:** los enlaces externos (Spotify, etc.) bajaron al footer — el sitio invita a explorar antes de enviar afuera.
+- **Pendiente de material del artista:** foto para el hero del home (un solo objeto, 20–40% opacidad), audio ambiental (Future Seed), fotografía de lugares y símbolos.

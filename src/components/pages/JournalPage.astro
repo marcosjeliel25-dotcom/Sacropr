@@ -7,23 +7,57 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
 
 const entries = (await getCollection('journal')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allSymbols = await getCollection('symbols');
+const allLocations = await getCollection('locations');
+const allProjects = await getCollection('projects');
+
+function refsFor(e: (typeof entries)[number]) {
+  const out: { label: string; href: string }[] = [];
+  for (const id of e.data.symbols) {
+    const s = allSymbols.find((x) => x.id === id);
+    if (s) out.push({ label: s.data.name, href: `${base}${prefix}/mundo/simbolos/${s.id}` });
+  }
+  for (const id of e.data.locations) {
+    const l = allLocations.find((x) => x.id === id);
+    if (l) out.push({ label: l.data.name, href: `${base}${prefix}/mundo/lugares/${l.id}` });
+  }
+  for (const id of e.data.projects) {
+    const p = allProjects.find((x) => x.id === id);
+    if (p) out.push({ label: p.data.title, href: `${base}${prefix}/proyectos/${p.id}` });
+  }
+  return out;
+}
 ---
 
 <Base locale={locale} title={t(locale, 'journal.title')}>
   <div class="wrap">
-    <section class="py-16">
-      <p class="eyebrow mb-12">{t(locale, 'journal.title')}</p>
+    <section class="py-20">
+      <p class="eyebrow reveal mb-14">{t(locale, 'journal.title')}</p>
       {
-        entries.map((e) => (
-          <article class="hairline border-b py-8 first:border-t">
-            <time class="text-[11px] tracking-[0.18em] text-piedra" datetime={e.data.date.toISOString().slice(0, 10)}>
-              {e.data.date.toLocaleDateString(locale === 'es' ? 'es-PR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </time>
-            <p class="serif mt-2 text-[clamp(19px,3vw,23px)]">{e.body?.trim()}</p>
-          </article>
-        ))
+        entries.map((e) => {
+          const refs = refsFor(e);
+          return (
+            <article class="hairline reveal border-b py-10 first:border-t">
+              <time class="text-[11px] tracking-[0.18em] text-piedra" datetime={e.data.date.toISOString().slice(0, 10)}>
+                {e.data.date.toLocaleDateString(locale === 'es' ? 'es-PR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+              <p class="serif mt-3 text-[clamp(20px,3.2vw,24px)] italic leading-relaxed">{e.body?.trim()}</p>
+              {refs.length > 0 && (
+                <p class="mt-4 flex flex-wrap gap-x-5 gap-y-1">
+                  {refs.map((r) => (
+                    <a href={r.href} class="inline-block py-1 text-[10px] tracking-[0.26em] uppercase text-piedra transition-colors duration-300 hover:text-bronce">
+                      {r.label}
+                    </a>
+                  ))}
+                </p>
+              )}
+            </article>
+          );
+        })
       }
     </section>
   </div>
