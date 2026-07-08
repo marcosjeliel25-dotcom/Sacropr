@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base locale={locale} title={t(locale, 'projects.title')}>
+  <div class="wrap">
+    <section class="py-16">
+      <p class="eyebrow mb-12">{t(locale, 'projects.title')}</p>
+      {
+        projects.map((p, i) => (
+          <a
+            href={`${base}${prefix}/proyectos/${p.id}`}
+            class={`hairline block border-b py-10 transition-colors duration-300 hover:text-bronce ${i === 0 ? 'border-t' : ''}`}
+          >
+            <span class="text-[11px] tracking-[0.18em] text-piedra">
+              {p.data.year} · {p.data.kind}
+            </span>
+            <span class="serif mt-1 block text-[clamp(28px,5vw,40px)] font-light">{p.data.title}</span>
+            {p.data.manifesto && <span class="serif mt-1 block text-lg italic text-piedra">{p.data.manifesto}</span>}
+          </a>
+        ))
+      }
+    </section>
+  </div>
+</Base>

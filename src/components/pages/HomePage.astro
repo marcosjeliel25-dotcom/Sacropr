@@ -1,0 +1,110 @@
+---
+import Base from '../../layouts/Base.astro';
+import Bird from '../Bird.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+
+const releases = [
+  { year: '2024', title: 'La Luz al Final del Túnel', kind: 'EP', href: 'https://open.spotify.com/album/5MYhjuZQXcnhy6bGirXPv4' },
+  { year: '2024', title: 'Desbalance', kind: locale === 'es' ? 'Sencillo' : 'Single', href: 'https://open.spotify.com/album/1MsVSJ2ZDr5pJPvaYMrdL1' },
+  { year: '2024', title: 'Me Pesa', kind: locale === 'es' ? 'Sencillo' : 'Single', href: 'https://open.spotify.com/track/6gN2MorjH6rJcZfu3hsGPo' },
+];
+
+const listen = [
+  { label: 'Spotify', href: 'https://open.spotify.com/artist/3gy7JBS79nEvQ2jDORrBCx' },
+  { label: 'Apple Music', href: 'https://music.apple.com/us/artist/sacro/1701623595' },
+  { label: 'YouTube', href: 'https://youtube.com/@laesquinadesacro' },
+  { label: 'Instagram', href: 'https://www.instagram.com/sacropr' },
+];
+
+const doors = [
+  { href: `${base}${prefix}/archivo`, label: t(locale, 'nav.archive') },
+  { href: `${base}${prefix}/proyectos`, label: t(locale, 'nav.projects') },
+  { href: `${base}${prefix}/mundo`, label: t(locale, 'nav.world') },
+  { href: `${base}${prefix}/diario`, label: t(locale, 'nav.journal') },
+  { href: `${base}${prefix}/contacto`, label: t(locale, 'nav.contact') },
+];
+---
+
+<Base locale={locale} bare>
+  <header class="flex min-h-svh flex-col items-center justify-center px-6 text-center">
+    <div class="mb-11">
+      <Bird />
+    </div>
+    <h1 class="serif text-[clamp(58px,13vw,110px)] leading-none font-light tracking-[0.4em] -mr-[0.4em]">SACRO</h1>
+    <p class="serif mt-10 text-[clamp(17px,2.8vw,21px)] italic">{t(locale, 'home.sentence')}</p>
+    <div class="rule mt-11" aria-hidden="true"></div>
+  </header>
+
+  <div class="wrap">
+    <section class="reveal py-24">
+      <p class="eyebrow mb-12">{locale === 'es' ? 'Música' : 'Music'}</p>
+      {
+        releases.map((r, i) => (
+          <a
+            class={`hairline flex items-baseline gap-5 border-b py-6 transition-colors duration-300 ${i === 0 ? 'border-t' : ''}`}
+            href={r.href}
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="min-w-12 text-[11px] tracking-[0.18em] text-piedra">{r.year}</span>
+            <span class="serif flex-1 text-[clamp(21px,3.4vw,26px)] transition-colors duration-300 hover:text-bronce">{r.title}</span>
+            <span class="text-[10px] tracking-[0.26em] uppercase whitespace-nowrap text-piedra">{r.kind}</span>
+          </a>
+        ))
+      }
+    </section>
+  </div>
+
+  <section class="reveal mt-6 bg-tinta px-6 py-32 text-center text-marfil">
+    <div class="rule mx-auto mb-10" aria-hidden="true"></div>
+    <h2 class="serif text-[clamp(38px,8vw,64px)] leading-tight font-light tracking-[0.22em] -mr-[0.22em]">
+      {locale === 'es' ? 'OCTUBRE 2026' : 'OCTOBER 2026'}
+    </h2>
+    <p class="serif mt-6 text-[clamp(17px,2.8vw,20px)] italic opacity-75">
+      {locale === 'es' ? 'La historia continúa.' : 'The story continues.'}
+    </p>
+  </section>
+
+  <div class="wrap">
+    <section class="reveal py-24">
+      <p class="eyebrow mb-12">{locale === 'es' ? 'El mundo' : 'The world'}</p>
+      <nav class="flex flex-col" aria-label={locale === 'es' ? 'Secciones' : 'Sections'}>
+        {
+          doors.map((d, i) => (
+            <a
+              href={d.href}
+              class={`hairline flex items-center justify-between border-b py-5 text-[12px] tracking-[0.32em] uppercase transition-colors duration-300 hover:text-bronce ${i === 0 ? 'border-t' : ''}`}
+            >
+              {d.label} <span class="serif text-lg text-bronce">→</span>
+            </a>
+          ))
+        }
+      </nav>
+    </section>
+
+    <section class="reveal pb-20">
+      <p class="eyebrow mb-12">{t(locale, 'listen.title')}</p>
+      <div class="flex flex-col">
+        {
+          listen.map((l, i) => (
+            <a
+              href={l.href}
+              target="_blank"
+              rel="noopener"
+              class={`hairline flex items-center justify-between border-b py-5 text-[12px] tracking-[0.32em] uppercase transition-colors duration-300 hover:text-bronce ${i === 0 ? 'border-t' : ''}`}
+            >
+              {l.label} <span class="serif text-lg text-bronce">→</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>

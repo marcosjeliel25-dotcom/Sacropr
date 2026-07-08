@@ -1,0 +1,49 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import type { Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  project: CollectionEntry<'projects'>;
+}
+const { locale, project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<Base locale={locale} title={project.data.title}>
+  <div class="wrap">
+    <section class="py-16">
+      <p class="eyebrow mb-3">{project.data.year} · {project.data.kind}</p>
+      <h1 class="serif text-[clamp(38px,8vw,64px)] leading-tight font-light">{project.data.title}</h1>
+      {project.data.manifesto && <p class="serif mt-4 text-[clamp(19px,3vw,24px)] italic text-piedra">{project.data.manifesto}</p>}
+    </section>
+
+    <section class="prose-sacro serif pb-16 text-[clamp(18px,2.8vw,21px)] leading-relaxed">
+      <Content />
+    </section>
+
+    {
+      project.data.tracks.length > 0 && (
+        <section class="pb-20">
+          <p class="eyebrow mb-10">{locale === 'es' ? 'Canciones' : 'Tracks'}</p>
+          <ol class="list-none">
+            {project.data.tracks.map((track, i) => (
+              <li class="hairline flex items-baseline gap-5 border-b py-4 first:border-t">
+                <span class="min-w-8 text-[11px] tracking-[0.18em] text-piedra">{String(i + 1).padStart(2, '0')}</span>
+                <span class="serif text-[clamp(19px,3vw,23px)]">{track}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+  </div>
+</Base>
+
+<style is:global>
+  .prose-sacro p + p {
+    margin-top: 1.1em;
+  }
+</style>

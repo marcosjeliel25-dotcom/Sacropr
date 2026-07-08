@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const journal = (await getCollection('journal')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+type Item = { year: string; title: string; kind: string; href?: string };
+const items: Item[] = [
+  { year: '2024', title: 'La Luz al Final del Túnel', kind: 'EP' },
+  { year: '2024', title: 'Desbalance', kind: locale === 'es' ? 'Sencillo' : 'Single' },
+  { year: '2024', title: 'Me Pesa', kind: locale === 'es' ? 'Sencillo' : 'Single' },
+  ...projects.map((p) => ({
+    year: p.data.year,
+    title: p.data.title,
+    kind: p.data.kind,
+    href: `${base}${prefix}/proyectos/${p.id}`,
+  })),
+];
+---
+
+<Base locale={locale} title={t(locale, 'archive.title')}>
+  <div class="wrap">
+    <section class="py-16">
+      <p class="eyebrow mb-3">{t(locale, 'archive.title')}</p>
+      <p class="serif text-[clamp(22px,3.4vw,28px)] italic">{t(locale, 'archive.intro')}</p>
+    </section>
+
+    <section class="pb-16">
+      {
+        items.map((r, i) => {
+          const inner = (
+            <>
+              <span class="min-w-12 text-[11px] tracking-[0.18em] text-piedra">{r.year}</span>
+              <span class="serif flex-1 text-[clamp(21px,3.4vw,26px)]">{r.title}</span>
+              <span class="text-[10px] tracking-[0.26em] uppercase whitespace-nowrap text-piedra">{r.kind}</span>
+            </>
+          );
+          const cls = `hairline flex items-baseline gap-5 border-b py-6 ${i === 0 ? 'border-t' : ''}`;
+          return r.href ? (
+            <a class={`${cls} transition-colors duration-300 hover:text-bronce`} href={r.href}>
+              {inner}
+            </a>
+          ) : (
+            <div class={cls}>{inner}</div>
+          );
+        })
+      }
+    </section>
+
+    <section class="pb-20">
+      <p class="eyebrow mb-10">{t(locale, 'journal.title')}</p>
+      {
+        journal.slice(0, 3).map((e) => (
+          <article class="hairline border-b py-6 first:border-t">
+            <time class="text-[11px] tracking-[0.18em] text-piedra" datetime={e.data.date.toISOString().slice(0, 10)}>
+              {e.data.date.toLocaleDateString(locale === 'es' ? 'es-PR' : 'en-US', { month: 'long', day: 'numeric' })}
+            </time>
+            <p class="serif mt-1 text-xl">{e.body?.trim()}</p>
+          </article>
+        ))
+      }
+      <p class="mt-8">
+        <a href={`${base}${prefix}/diario`} class="text-[12px] tracking-[0.32em] uppercase text-piedra transition-colors duration-300 hover:text-bronce">
+          {t(locale, 'journal.title')} <span class="serif text-bronce">→</span>
+        </a>
+      </p>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+
+const symbols = (await getCollection('symbols')).sort((a, b) => a.data.order - b.data.order);
+const locations = (await getCollection('locations')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base locale={locale} title={t(locale, 'world.title')}>
+  <div class="wrap">
+    <section class="py-16">
+      <p class="eyebrow mb-3">{t(locale, 'world.title')}</p>
+      <p class="serif text-[clamp(22px,3.4vw,28px)] italic">
+        {locale === 'es' ? 'No explicado. Documentado.' : 'Not explained. Documented.'}
+      </p>
+    </section>
+
+    <section class="pb-16">
+      <p class="eyebrow mb-10">{t(locale, 'world.symbols')}</p>
+      <div class="grid grid-cols-2 gap-x-8">
+        {
+          symbols.map((s) => (
+            <a
+              href={`${base}${prefix}/mundo/simbolos/${s.id}`}
+              class="hairline serif border-b py-4 text-[clamp(18px,2.8vw,22px)] transition-colors duration-300 hover:text-bronce"
+            >
+              {s.data.name}
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="pb-20">
+      <p class="eyebrow mb-10">{t(locale, 'world.locations')}</p>
+      <div class="grid grid-cols-2 gap-x-8">
+        {
+          locations.map((l) => (
+            <a
+              href={`${base}${prefix}/mundo/lugares/${l.id}`}
+              class="hairline serif border-b py-4 text-[clamp(18px,2.8vw,22px)] transition-colors duration-300 hover:text-bronce"
+            >
+              {l.data.name}
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>

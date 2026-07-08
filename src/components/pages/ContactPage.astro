@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const rows = [
+  { label: locale === 'es' ? 'Management · Booking · Prensa' : 'Management · Booking · Press', value: 'Marcosjeliel25@gmail.com', href: 'mailto:Marcosjeliel25@gmail.com' },
+  { label: locale === 'es' ? 'Teléfono' : 'Phone', value: '+1 787 366 5330', href: 'tel:+17873665330' },
+];
+---
+
+<Base locale={locale} title={t(locale, 'contact.title')}>
+  <div class="wrap">
+    <section class="py-16">
+      <p class="eyebrow mb-12">{t(locale, 'contact.title')}</p>
+      {
+        rows.map((r, i) => (
+          <a
+            href={r.href}
+            class={`hairline flex flex-col gap-1 border-b py-6 transition-colors duration-300 hover:text-bronce sm:flex-row sm:items-baseline sm:justify-between ${i === 0 ? 'border-t' : ''}`}
+          >
+            <span class="text-[11px] tracking-[0.26em] uppercase text-piedra">{r.label}</span>
+            <span class="text-[12px] tracking-[0.32em] uppercase">{r.value}</span>
+          </a>
+        ))
+      }
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,93 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-marfil: #f6f2ea;
+  --color-tinta: #15130f;
+  --color-bronce: #a5854d;
+  --color-piedra: #8e8779;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Jost', system-ui, sans-serif;
+}
+
+:root {
+  --bg: var(--color-marfil);
+  --fg: var(--color-tinta);
+  --hair: rgba(21, 19, 15, 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #171410;
+    --fg: #efe9dd;
+    --hair: rgba(246, 242, 234, 0.16);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  overflow-x: hidden;
+}
+
+.wrap {
+  max-width: 640px;
+  margin-inline: auto;
+  padding-inline: 28px;
+}
+
+.eyebrow {
+  color: var(--color-bronce);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.serif {
+  font-family: var(--font-serif);
+}
+
+.hairline {
+  border-color: var(--hair);
+}
+
+.rule {
+  width: 38px;
+  height: 1px;
+  background: var(--color-bronce);
+  opacity: 0.8;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 1px solid var(--color-bronce);
+  outline-offset: 3px;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

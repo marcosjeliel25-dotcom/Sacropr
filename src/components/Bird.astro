@@ -1,0 +1,26 @@
+---
+interface Props {
+  size?: number;
+}
+const { size = 22 } = Astro.props;
+---
+
+<span class="bird" aria-hidden="true" style={`width:${size}px;height:${size}px`}>
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+    <path
+      d="M32 30c-6-9-18-13-30-11 9 3 15 7 19 13-4-1-8 0-11 2 5 0 9 2 12 5 2 2 4 6 5 10l3-8c2 2 3 5 3 9 2-4 2-8 1-11 4-4 9-6 15-6-4-2-8-2-12-1 5-6 12-10 21-12-12-2-22 2-26 10z"
+    ></path>
+  </svg>
+</span>
+
+<style>
+  .bird {
+    display: inline-block;
+    color: var(--color-bronce);
+    opacity: 0.9;
+  }
+  .bird svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>

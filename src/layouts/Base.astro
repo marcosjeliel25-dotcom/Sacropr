@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import '@fontsource/cormorant-garamond/300.css';
+import '@fontsource/cormorant-garamond/400.css';
+import '@fontsource/cormorant-garamond/400-italic.css';
+import '@fontsource/jost/300.css';
+import '@fontsource/jost/400.css';
+import { t, type Locale } from '../i18n/ui';
+
+interface Props {
+  title?: string;
+  description?: string;
+  locale?: Locale;
+  /** hide site chrome for the pure hero page */
+  bare?: boolean;
+}
+
+const { title, description, locale = 'es', bare = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+const pageTitle = title ? `${title} — SACRO` : 'SACRO';
+const desc = description ?? t(locale, 'meta.description');
+
+const nav = [
+  { href: `${base}${prefix}/archivo`, label: t(locale, 'nav.archive') },
+  { href: `${base}${prefix}/proyectos`, label: t(locale, 'nav.projects') },
+  { href: `${base}${prefix}/mundo`, label: t(locale, 'nav.world') },
+  { href: `${base}${prefix}/diario`, label: t(locale, 'nav.journal') },
+  { href: `${base}${prefix}/contacto`, label: t(locale, 'nav.contact') },
+];
+
+// swap locale, keep the same path
+const path = Astro.url.pathname.replace(base, '').replace(/^\/en/, '') || '/';
+const esHref = `${base}${path}`;
+const enHref = `${base}/en${path === '/' ? '' : path}`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="alternate" type="application/rss+xml" title="SACRO — Diario" href={`${base}/rss.xml`} />
+  </head>
+  <body>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-marfil focus:px-4 focus:py-2 focus:text-tinta"
+      >{locale === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a
+    >
+
+    <nav class="fixed top-5 right-6 z-50 flex gap-1 text-[11px] tracking-[0.22em]" aria-label={locale === 'es' ? 'Idioma' : 'Language'}>
+      <a href={esHref} class={locale === 'es' ? 'text-bronce' : 'text-piedra'} aria-current={locale === 'es' ? 'true' : undefined}>ES</a>
+      <span class="text-piedra" aria-hidden="true">·</span>
+      <a href={enHref} class={locale === 'en' ? 'text-bronce' : 'text-piedra'} aria-current={locale === 'en' ? 'true' : undefined}>EN</a>
+    </nav>
+
+    {
+      !bare && (
+        <header class="wrap pt-14 pb-4">
+          <a href={`${base}${prefix}/`} class="serif text-2xl tracking-[0.4em]">
+            SACRO
+          </a>
+          <nav aria-label={locale === 'es' ? 'Principal' : 'Main'} class="mt-6 flex flex-wrap gap-x-7 gap-y-2 text-[11px] tracking-[0.32em] uppercase">
+            {nav.map((item) => (
+              <a href={item.href} class="text-piedra transition-colors duration-300 hover:text-bronce">
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </header>
+      )
+    }
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <footer class="wrap py-16 text-center text-[10px] tracking-[0.3em] uppercase text-piedra">
+      <span>© MMXXVI Sacro Media</span>
+    </footer>
+
+    <script>
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.15 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
