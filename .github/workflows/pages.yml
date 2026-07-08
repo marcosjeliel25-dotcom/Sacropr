@@ -2,7 +2,7 @@ name: Deploy Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/sacro-hq-v2-setup-p1zmco]
   workflow_dispatch:
 
 permissions:
