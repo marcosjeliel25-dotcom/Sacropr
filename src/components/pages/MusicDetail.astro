@@ -1,0 +1,90 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Related from '../Related.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  entry: CollectionEntry<'music'>;
+}
+const { locale, entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const es = locale === 'es';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const kindEn: Record<string, string> = { Sencillo: 'Single', Álbum: 'Album' };
+const kind = es ? d.kind : (kindEn[d.kind] ?? d.kind);
+const eyebrow = d.status === 'upcoming' ? (es ? 'Octubre 2026' : 'October 2026') : d.year;
+
+const listen = [
+  d.spotify && { label: 'Spotify', href: d.spotify },
+  d.apple && { label: 'Apple Music', href: d.apple },
+].filter(Boolean) as { label: string; href: string }[];
+---
+
+<Base locale={locale} title={d.title}>
+  <div class="wrap">
+    <section class="reveal py-24">
+      <p class="eyebrow d1 reveal mb-4">{eyebrow} · {kind}</p>
+      <h1 class="serif d2 reveal text-[clamp(34px,7vw,56px)] leading-tight font-light">{d.title}</h1>
+    </section>
+
+    {
+      d.cover && (
+        <figure class="reveal pb-16">
+          <img src={`${base}/${d.cover}`} alt={d.title} loading="lazy" class="w-full" />
+        </figure>
+      )
+    }
+
+    <section class="prose-sacro serif reveal pb-20 text-[clamp(19px,3vw,23px)] italic leading-relaxed">
+      <Content />
+    </section>
+
+    {
+      d.tracks.length > 0 && (
+        <section class="reveal pb-20">
+          <p class="eyebrow mb-10">{t(locale, 'project.tracks')}</p>
+          <ol class="list-none">
+            {d.tracks.map((track, i) => (
+              <li class="hairline flex items-baseline gap-5 border-b py-4 first:border-t">
+                <span class="min-w-8 text-[11px] tracking-[0.18em] text-piedra">{String(i + 1).padStart(2, '0')}</span>
+                <span class="serif text-[clamp(19px,3vw,23px)]">{track}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    {
+      listen.length > 0 && (
+        <section class="reveal pb-20">
+          <p class="eyebrow mb-8">{t(locale, 'listen.title')}</p>
+          <div class="flex flex-col">
+            {listen.map((l, i) => (
+              <a
+                href={l.href}
+                target="_blank"
+                rel="noopener"
+                class={`hairline flex items-center justify-between border-b py-5 text-[12px] tracking-[0.32em] uppercase transition-colors duration-300 hover:text-bronce ${i === 0 ? 'border-t' : ''}`}
+              >
+                {l.label} <span class="serif text-lg text-bronce">→</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <Related locale={locale} self={{ collection: 'music', id: entry.id }} symbols={d.symbols} locations={d.locations} />
+  </div>
+</Base>
+
+<style is:global>
+  .prose-sacro p + p {
+    margin-top: 1.1em;
+  }
+</style>

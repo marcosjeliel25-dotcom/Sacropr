@@ -14,6 +14,7 @@ const entries = (await getCollection('journal')).sort((a, b) => b.data.date.valu
 const allSymbols = await getCollection('symbols');
 const allLocations = await getCollection('locations');
 const allProjects = await getCollection('projects');
+const allMusic = await getCollection('music');
 
 function refsFor(e: (typeof entries)[number]) {
   const out: { label: string; href: string }[] = [];
@@ -29,6 +30,10 @@ function refsFor(e: (typeof entries)[number]) {
     const p = allProjects.find((x) => x.id === id);
     if (p) out.push({ label: p.data.title, href: `${base}${prefix}/proyectos/${p.id}` });
   }
+  for (const id of e.data.music) {
+    const m = allMusic.find((x) => x.id === id);
+    if (m) out.push({ label: m.data.title, href: `${base}${prefix}/musica/${m.id}` });
+  }
   return out;
 }
 ---
@@ -41,7 +46,7 @@ function refsFor(e: (typeof entries)[number]) {
         entries.map((e) => {
           const refs = refsFor(e);
           return (
-            <article class="hairline reveal border-b py-10 first:border-t">
+            <article id={e.id} class="hairline reveal scroll-mt-24 border-b py-10 first:border-t">
               <time class="text-[11px] tracking-[0.18em] text-piedra" datetime={e.data.date.toISOString().slice(0, 10)}>
                 {e.data.date.toLocaleDateString(locale === 'es' ? 'es-PR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
               </time>

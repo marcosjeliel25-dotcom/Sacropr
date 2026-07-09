@@ -74,3 +74,16 @@ Nunca preguntar "¿qué se ve cool?". Siempre preguntar **"¿qué hace el mundo 
 - **Proyectos como exhibición:** secciones condicionales (historia, canciones, notas, créditos, relacionado) que solo aparecen si existe el contenido.
 - **Footer:** los enlaces externos (Spotify, etc.) bajaron al footer — el sitio invita a explorar antes de enviar afuera.
 - **Pendiente de material del artista:** foto para el hero del home (un solo objeto, 20–40% opacidad), audio ambiental (Future Seed), fotografía de lugares y símbolos.
+
+## v3 — El catálogo y el descubrimiento (Julio 2026) · Status: Canon
+
+**Arquitectura de información:**
+- **`content/music/` es la fuente única de verdad del catálogo.** Un archivo por lanzamiento (2024: EP + 2 sencillos · 2026: 4 sencillos + álbum). Home, Archivo y Proyectos se generan desde ahí — cero duplicación.
+- **Cada lanzamiento tiene su página** (`/musica/…`) con año, tipo, links de streaming (placeholders donde falten), tracklist, y conexiones.
+- **Eras públicas:** *Primeros Trabajos* (2023–2024, antes del universo — sin símbolos forzados) y *Del Amor al Arte* (2026). **"Prequel" es solo nombre interno** — el público experimenta las canciones una a una; el archivo `prequel.md` queda marcado Deprecated, nunca borrado.
+- **El pájaro ES el Guaraguao.** Un solo pájaro, siempre ese nombre.
+- **2023 en el timeline:** "La música deja de ser una posibilidad." + "Primeras presentaciones en vivo." Sin fechas públicas de 2026 — solo "Octubre 2026" hasta estar a un mes.
+- **Grafo bidireccional:** las relaciones se declaran UNA vez en el frontmatter y se calculan en reversa al compilar. Símbolo ↔ canción ↔ lugar ↔ diario ↔ creación ↔ era.
+- **Reto del descubrimiento (verificado con crawler):** ignorando toda navegación, siguiendo solo contenido relacionado, se descubren 24 de 30 páginas. Las 6 restantes: 3 portadas de navegación + 3 lugares aún sin apariciones (se conectarán con material real).
+- **Listo para fotografía:** todos los tipos de contenido aceptan `cover` y `gallery` (3:2 horizontal, luz natural, look de cine); solo renderizan si existen. Las fotos van en `public/photos/`.
+- **Motivos visuales en espera** (Café, Flor, Espejo, Ventana, Libreta, Océano, Viento): sin página hasta tener múltiples apariciones.

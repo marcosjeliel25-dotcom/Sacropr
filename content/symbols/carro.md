@@ -3,7 +3,7 @@ name: 'Carro'
 order: 3
 readings: ['Pensamiento', 'Transición', 'Reflexión', 'Viaje']
 appearances: ['Otra Botella', 'Del Amor al Arte']
-projects: ['prequel', 'del-amor-al-arte']
+projects: ['del-amor-al-arte']
 firstAppearance: 'Otra Botella'
 ---
 

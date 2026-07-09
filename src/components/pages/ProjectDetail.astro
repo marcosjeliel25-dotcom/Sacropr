@@ -1,5 +1,5 @@
 ---
-import { render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Related from '../Related.astro';
@@ -12,6 +12,19 @@ interface Props {
 const { locale, project } = Astro.props;
 const { Content } = await render(project);
 const d = project.data;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const prefix = locale === 'es' ? '' : '/en';
+const es = locale === 'es';
+const kindEn: Record<string, string> = { Sencillo: 'Single', 'Álbum': 'Album' };
+const releases = (await getCollection('music'))
+  .filter((m) => m.data.era === project.id)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((m) => ({
+    title: m.data.title,
+    kind: es ? m.data.kind : (kindEn[m.data.kind] ?? m.data.kind),
+    upcoming: m.data.status === 'upcoming',
+    href: `${base}${prefix}/musica/${m.id}`,
+  }));
 ---
 
 <Base locale={locale} title={d.title}>
@@ -22,9 +35,38 @@ const d = project.data;
       {d.manifesto && <p class="serif d3 reveal mt-6 text-[clamp(19px,3vw,24px)] italic text-piedra">{d.manifesto}</p>}
     </section>
 
+    {
+      d.cover && (
+        <figure class="reveal pb-16">
+          <img src={`${base}/${d.cover}`} alt={d.title} loading="lazy" class="w-full" />
+        </figure>
+      )
+    }
+
     <section class="prose-sacro serif reveal pb-24 text-[clamp(18px,2.8vw,21px)] leading-relaxed">
       <Content />
     </section>
+
+    {
+      releases.length > 0 && (
+        <section class="reveal pb-24">
+          <p class="eyebrow mb-10">{t(locale, 'project.releases')}</p>
+          <div class="flex flex-col">
+            {releases.map((r, i) => (
+              <a
+                href={r.href}
+                class={`hairline flex items-baseline justify-between gap-5 border-b py-4 transition-colors duration-300 hover:text-bronce ${i === 0 ? 'border-t' : ''}`}
+              >
+                <span class="serif text-[clamp(19px,3vw,23px)]">{r.title}</span>
+                <span class="text-[10px] tracking-[0.26em] uppercase whitespace-nowrap text-piedra">
+                  {r.upcoming ? (es ? 'Octubre 2026' : 'October 2026') : r.kind}
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
 
     {
       d.story && (
@@ -71,7 +113,7 @@ const d = project.data;
       )
     }
 
-    <Related locale={locale} symbols={d.symbols} locations={d.locations} mentionsOf={{ collection: 'projects', id: project.id }} />
+    <Related locale={locale} self={{ collection: 'projects', id: project.id }} symbols={d.symbols} locations={d.locations} />
   </div>
 </Base>
 

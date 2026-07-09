@@ -3,7 +3,7 @@ name: 'Bicicleta'
 order: 4
 readings: ['Niñez', 'Casa', 'Raíces']
 appearances: ['Simplemente No Hay Conexión']
-projects: ['prequel']
+projects: ['del-amor-al-arte']
 locations: ['primera-posita']
 firstAppearance: 'Simplemente No Hay Conexión'
 ---

@@ -1,9 +1,9 @@
 ---
-title: 'Prequel'
+title: 'Prequel (nombre interno)'
 order: 1
 year: '2026'
 kind: 'Cuatro sencillos'
-status: Canon
+status: Deprecated
 manifesto: 'Ruido, pérdida, propósito, regreso, identidad.'
 tracks:
   - 'Otra Botella'
