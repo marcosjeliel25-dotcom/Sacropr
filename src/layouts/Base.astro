@@ -52,7 +52,6 @@ const enHref = `${base}/en${path === '/' ? '' : path}`;
     <title>{pageTitle}</title>
     <meta name="description" content={desc} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="alternate" type="application/rss+xml" title="SACRO — Diario" href={`${base}/rss.xml`} />
     <ClientRouter />
   </head>
   <body>
@@ -90,15 +89,17 @@ const enHref = `${base}/en${path === '/' ? '' : path}`;
     </main>
 
     <footer class="wrap py-16 text-center">
-      <div class="mb-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-[10px] tracking-[0.3em] uppercase">
-        {
-          listen.map((l) => (
-            <a href={l.href} target="_blank" rel="noopener" class="inline-block py-2 text-piedra transition-colors duration-300 hover:text-bronce">
-              {l.label}
-            </a>
-          ))
-        }
-      </div>
+      {
+        !bare && (
+          <div class="mb-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-[10px] tracking-[0.3em] uppercase">
+            {listen.map((l) => (
+              <a href={l.href} target="_blank" rel="noopener" class="inline-block py-2 text-piedra transition-colors duration-300 hover:text-bronce">
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
       <span class="text-[10px] tracking-[0.3em] uppercase text-piedra">© MMXXVI Sacro Media</span>
     </footer>
 

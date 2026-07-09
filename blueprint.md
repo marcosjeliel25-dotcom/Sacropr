@@ -87,3 +87,7 @@ Nunca preguntar "¿qué se ve cool?". Siempre preguntar **"¿qué hace el mundo 
 - **Reto del descubrimiento (verificado con crawler):** ignorando toda navegación, siguiendo solo contenido relacionado, se descubren 24 de 30 páginas. Las 6 restantes: 3 portadas de navegación + 3 lugares aún sin apariciones (se conectarán con material real).
 - **Listo para fotografía:** todos los tipos de contenido aceptan `cover` y `gallery` (3:2 horizontal, luz natural, look de cine); solo renderizan si existen. Las fotos van en `public/photos/`.
 - **Motivos visuales en espera** (Café, Flor, Espejo, Ventana, Libreta, Océano, Viento): sin página hasta tener múltiples apariciones.
+
+## v4 — Solo la portada (Julio 2026) · Status: Canon
+
+Decisión del artista: **nada provisional se publica.** El sitio público es solo la portada (SACRO, Guaraguao, música 2024 con links a Spotify, OCTUBRE 2026, Escucha, Contacto). El museo completo —archivo, proyectos, mundo, diario, creación, catálogo— queda construido en el repo con status **Testing**: se publica sección por sección cuando su contenido sea real y correcto. Para republicar una sección basta restaurar su ruta en `src/pages/` (todo vive en el historial de git).

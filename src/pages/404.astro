@@ -1,10 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<Base title="404">
-  <div class="wrap py-24 text-center">
+<Base title="404" bare>
+  <div class="wrap py-40 text-center">
     <p class="eyebrow mb-6">404</p>
     <p class="serif text-[clamp(22px,3.4vw,28px)] italic">Esta página no existe. Todavía.</p>
+    <p class="mt-10">
+      <a href={`${base}/`} class="inline-block py-2 text-[12px] tracking-[0.32em] uppercase text-piedra transition-colors duration-300 hover:text-bronce">
+        SACRO <span class="serif text-bronce">→</span>
+      </a>
+    </p>
   </div>
 </Base>
